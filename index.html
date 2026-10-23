@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>بازی عبارت‌های جبری - ریاضی هشتم</title>
+    <style>
+        :root {
+            --bg-primary: #064e3b;
+            --bg-secondary: #047857;
+            --card-bg: #fef08a;
+            --accent-blue: #0284c7;
+            --accent-blue-hover: #0369a1;
+            --accent-yellow: #facc15;
+            --success-color: #15803d;
+            --error-color: #b91c1c;
+            --text-main: #0f172a;
+            --slot-border: #0284c7;
+            --slot-bg: #f0fdf4;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            font-family: 'Tahoma', 'Segoe UI', Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .bg-decor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+            opacity: 0.18;
+        }
+
+        .math-symbol {
+            position: absolute;
+            font-weight: bold;
+            color: var(--accent-yellow);
+            font-size: 1.4rem;
+            white-space: nowrap;
+            direction: ltr;
+        }
+
+        .container {
+            width: 96%;
+            max-width: 850px;
+            background: rgba(255, 255, 255, 0.98);
+            color: var(--text-main);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 10;
+            margin: 10px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            border: 4px solid var(--accent-yellow);
+        }
+
+        .header-tag {
+            width: 100%;
+            text-align: center;
+            font-size: 1.05rem;
+            font-weight: bold;
+            color: #064e3b;
+            background-color: #fef08a;
+            padding: 8px 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border: 2px solid #facc15;
+        }
+
+        #start-page {
+            text-align: center;
+            width: 100%;
+            padding: 10px 0;
+        }
+
+        .title {
+            font-size: 1.8rem;
+            color: #065f46;
+            margin-bottom: 8px;
+            font-weight: 900;
+        }
+
+        .subtitle {
+            font-size: 1.15rem;
+            color: var(--accent-blue);
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .input-group {
+            margin: 20px 0;
+            width: 100%;
+            max-width: 380px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            color: #166534;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1rem;
+            border: 2px solid #a7f3d0;
+            border-radius: 10px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-group input:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .btn {
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.15rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
+            margin: 10px;
+        }
+
+        .btn:disabled {
+            background-color: #94a3b8;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .btn:hover:not(:disabled) {
+            background-color: var(--accent-blue-hover);
+            transform: translateY(-2px);
+        }
+
+        .guide-box {
+            background-color: #e0f2fe;
+            border: 2px dashed var(--accent-blue);
+            border-radius: 12px;
+            padding: 12px;
+            margin: 15px auto;
+            width: 100%;
+            max-width: 450px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .guide-box:hover {
+            background-color: #bae6fd;
+        }
+
+        .guide-title {
+            font-weight: bold;
+            color: #0369a1;
+            font-size: 1.05rem;
+        }
+
+        .designer-tag {
+            margin-top: 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #064e3b;
+            border-top: 2px solid #e2e8f0;
+            padding-top: 12px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 22px;
+            border-radius: 16px;
+            max-width: 550px;
+            width: 100%;
+            color: var(--text-main);
+            line-height: 1.8;
+            text-align: justify;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            border: 3px solid var(--accent-yellow);
+        }
+
+        #game-page {
+            display: none;
+            width: 100%;
+        }
+
+        .header-info {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 8px 16px;
+            background: #065f46;
+            color: white;
+            border-radius: 10px;
+            font-size: 1.05rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+            border: 1px solid var(--accent-yellow);
+        }
+
+        .equation-display {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #064e3b;
+            margin: 8px 0 16px 0;
+            text-align: center;
+            direction: ltr;
+            background: #fef9c3;
+            padding: 10px;
+            border-radius: 12px;
+            border: 2px solid #facc15;
+        }
+
+        .steps-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .step-row {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 12px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .step-label {
+            font-weight: bold;
+            color: #047857;
+            font-size: 0.95rem;
+            min-width: 70px;
+        }
+
+        .slots-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            direction: ltr;
+            flex-grow: 1;
+        }
+
+        .slot {
+            min-width: 52px;
+            height: 48px;
+            padding: 0 8px;
+            border: 2px dashed var(--slot-border);
+            border-radius: 8px;
+            background: var(--slot-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            font-weight: bold;
+            color: #0f172a;
+            transition: all 0.15s;
+            cursor: pointer;
+        }
+
+        .slot.hovered {
+            background-color: #bae6fd;
+            border-color: var(--accent-blue);
+            border-style: solid;
+        }
+
+        .slot.filled {
+            border-style: solid;
+            border-color: var(--accent-blue);
+            background-color: #e0f2fe;
+        }
+
+        .cards-bank-container {
+            width: 100%;
+            border-top: 2px solid #e2e8f0;
+            padding-top: 12px;
+            text-align: center;
+        }
+
+        .cards-bank-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            color: #047857;
+        }
+
+        .cards-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            direction: ltr;
+            padding: 10px;
+            background: #f0fdf4;
+            border-radius: 12px;
+            min-height: 100px;
+            border: 1px solid #bbf7d0;
+        }
+
+        .card {
+            min-width: 48px;
+            height: 46px;
+            padding: 0 10px;
+            background: var(--card-bg);
+            border: 2px solid #eab308;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #713f12;
+            cursor: grab;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            touch-action: none;
+            z-index: 20;
+        }
+
+        .card.selected {
+            border-color: var(--accent-blue);
+            background-color: #bae6fd;
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.4);
+        }
+
+        .card.dragging {
+            opacity: 0.9;
+            transform: scale(1.12);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            cursor: grabbing;
+            z-index: 1000;
+        }
+
+        .feedback-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: white;
+            z-index: 2000;
+            display: none;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+            text-align: center;
+        }
+
+        .feedback-success { background-color: var(--success-color); }
+        .feedback-error { background-color: var(--error-color); }
+
+        #result-page {
+            display: none;
+            text-align: center;
+            width: 100%;
+        }
+
+        .result-box {
+            background: #f0fdf4;
+            border-radius: 14px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #a7f3d0;
+        }
+
+        .result-item {
+            font-size: 1.15rem;
+            margin: 10px 0;
+            color: var(--text-main);
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 12px; width: 98%; }
+            .title { font-size: 1.4rem; }
+            .subtitle { font-size: 0.95rem; }
+            .header-tag { font-size: 0.9rem; padding: 6px; }
+            .equation-display { font-size: 1.3rem; padding: 6px; }
+            .slot { min-width: 38px; height: 40px; font-size: 0.88rem; padding: 0 4px; }
+            .card { min-width: 38px; height: 40px; font-size: 0.88rem; padding: 0 5px; }
+            .step-row { padding: 8px; }
+            .step-label { font-size: 0.85rem; min-width: 55px; }
+            .btn { padding: 10px 20px; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-decor" id="bg-decor"></div>
+
+    <div class="container">
+        <!-- پیام بالایی مشترک -->
+        <div class="header-tag">طراح بازی: ویدا آقاجان اشکوری - گروه ریاضی متوسطه اول استان مازندران</div>
+
+        <div id="start-page">
+            <h1 class="title">بازی ساده‌سازی عبارت‌های جبری توان‌دار</h1>
+            <h2 class="subtitle">ریاضی پایه هشتم – فصل چهارم (جبر)</h2>
+
+            <div class="input-group">
+                <label for="student-name">نام و نام خانوادگی دانش‌آموز:</label>
+                <input type="text" id="student-name" placeholder="نام خود را وارد کنید..." autocomplete="off">
+            </div>
+
+            <div class="guide-box" onclick="toggleGuide(true)">
+                <span class="guide-title">📖 راهنمای بازی (برای مشاهده کلیک کنید)</span>
+            </div>
+
+            <button id="start-btn" class="btn" disabled onclick="startGame()">شروع بازی</button>
+        </div>
+
+        <div id="game-page">
+            <div class="header-info">
+                <span id="question-tracker">سؤال ۱ از ۲</span>
+                <span id="score-tracker">امتیاز: ۰ از ۶</span>
+            </div>
+
+            <div class="equation-display" id="current-equation">4x(2x - 3y) - 5x(x - 2y)</div>
+
+            <div class="steps-container" id="steps-container"></div>
+
+            <div class="cards-bank-container">
+                <div class="cards-bank-title">کارت‌های پاسخ (می‌توانید کارت را بکشید یا با کلیک انتخاب کنید):</div>
+                <div class="cards-bank" id="cards-bank"></div>
+            </div>
+        </div>
+
+        <div id="result-page">
+            <h1 class="title">🎉 بازی به پایان رسید 🎉</h1>
+            
+            <div class="result-box">
+                <div class="result-item" id="res-name">نام دانش‌آموز: -</div>
+                <div class="result-item" id="res-score">امتیاز نهایی: ۰ از ۶</div>
+                <div class="result-item" id="res-correct">تعداد سؤال‌های صحیح: ۰ از ۲</div>
+                <div class="result-item" id="res-percent">درصد موفقیت: ۰٪</div>
+                <div class="result-item" id="res-msg" style="font-weight: bold; color: var(--accent-blue); margin-top: 12px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="guide-modal">
+        <div class="modal-content">
+            <h3 style="color: #065f46; margin-bottom: 12px; text-align: center;">📖 راهنمای انجام بازی</h3>
+            <p><strong>۱. قرار دادن کارت‌ها:</strong> کارت‌ها را کشیده و روی کادر خالی قرار دهید یا با کلیک روی کارت و سپس کلیک روی کادر، آن را جای‌گذاری کنید.</p>
+            <p><strong>۲. رعایت ترتیب خانه به خانه:</strong> جای‌گذاری کارت‌ها باید گام به گام و به ترتیب از اولین کادر خالی (از سمت چپ) انجام شود.</p>
+            <p><strong>۳. کارت‌های اشتباه:</strong> در صورت انتخاب کارت نادرست، پیام خطا داده شده و کادر برای چند لحظه پاسخ صحیح را نشان می‌دهد.</p>
+            <p><strong>۴. امتیازدهی:</strong> تکمیل موفقیت‌آمیز تمام مراحل هر سؤال، ۳ امتیاز دارد.</p>
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn" onclick="toggleGuide(false)">متوجه شدم - بستن راهنما</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="feedback" class="feedback-message"></div>
+
+    <script>
+        const questionsData = [
+            {
+                id: 1,
+                equation: "4x(2x - 3y) - 5x(x - 2y)",
+                steps: [
+                    { label: "مرحله ۱", target: ["8x²", "-", "12xy", "-", "5x²", "+", "10xy"] },
+                    { label: "مرحله ۲", target: ["8x²", "-", "5x²", "-", "12xy", "+", "10xy"] },
+                    { label: "مرحله ۳", target: ["3x²", "-", "2xy"] }
+                ],
+                distractors: ["-10xy", "13x²", "+2xy", "-22xy", "8x", "5x", "3x"]
+            },
+            {
+                id: 2,
+                equation: "(3x - 4)²",
+                steps: [
+                    { label: "مرحله ۱", target: ["(3x - 4)", "(3x - 4)"] },
+                    { label: "مرحله ۲", target: ["9x²", "-", "12x", "-", "12x", "+", "16"] },
+                    { label: "مرحله ۳", target: ["9x²", "-", "24x", "+", "16"] }
+                ],
+                distractors: ["(3x + 4)", "9x²", "-16", "-24x", "+12x", "-12x", "+24x", "+8"]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let studentName = "";
+        let currentStepIndex = 0;
+        let currentSlotIndex = 0;
+        let selectedCard = null;
+
+        const nameInput = document.getElementById('student-name');
+        const startBtn = document.getElementById('start-btn');
+        const guideModal = document.getElementById('guide-modal');
+        const startPage = document.getElementById('start-page');
+        const gamePage = document.getElementById('game-page');
+        const resultPage = document.getElementById('result-page');
+        const feedbackEl = document.getElementById('feedback');
+
+        function initDecor() {
+            const container = document.getElementById('bg-decor');
+            const items = ["x²", "(3x-4)²", "9x²", "12x", "xy", "+", "−", "=", "÷", "( )", "3x²", "-2xy", "24x"];
+            for (let i = 0; i < 30; i++) {
+                const el = document.createElement('div');
+                el.className = 'math-symbol';
+                el.textContent = items[Math.floor(Math.random() * items.length)];
+                el.style.top = Math.random() * 95 + 'vh';
+                el.style.left = Math.random() * 95 + 'vw';
+                el.style.fontSize = (Math.random() * 0.8 + 0.9) + 'rem';
+                container.appendChild(el);
+            }
+        }
+        initDecor();
+
+        nameInput.addEventListener('input', () => {
+            startBtn.disabled = nameInput.value.trim() === "";
+        });
+
+        function toggleGuide(show) {
+            guideModal.style.display = show ? 'flex' : 'none';
+        }
+
+        function startGame() {
+            studentName = nameInput.value.trim();
+            if (!studentName) return;
+            startPage.style.display = 'none';
+            gamePage.style.display = 'block';
+            loadQuestion(0);
+        }
+
+        function loadQuestion(index) {
+            currentQuestionIndex = index;
+            currentStepIndex = 0;
+            currentSlotIndex = 0;
+            selectedCard = null;
+
+            const q = questionsData[index];
+            document.getElementById('question-tracker').textContent = `سؤال ${index + 1} از ۲`;
+            document.getElementById('score-tracker').textContent = `امتیاز: ${score} از ۶`;
+            document.getElementById('current-equation').textContent = q.equation;
+
+            const stepsContainer = document.getElementById('steps-container');
+            stepsContainer.innerHTML = '';
+
+            q.steps.forEach((step, sIdx) => {
+                const stepRow = document.createElement('div');
+                stepRow.className = 'step-row';
+
+                const labelSpan = document.createElement('span');
+                labelSpan.className = 'step-label';
+                labelSpan.textContent = step.label;
+
+                const slotsGroup = document.createElement('div');
+                slotsGroup.className = 'slots-group';
+
+                step.target.forEach((val, slotIdx) => {
+                    const slot = document.createElement('div');
+                    slot.className = 'slot';
+                    slot.dataset.step = sIdx;
+                    slot.dataset.slot = slotIdx;
+                    slot.dataset.target = val;
+
+                    slot.addEventListener('click', () => {
+                        if (selectedCard && !slot.classList.contains('filled')) {
+                            validateDrop(selectedCard, slot);
+                        }
+                    });
+
+                    slotsGroup.appendChild(slot);
+                });
+
+                stepRow.appendChild(labelSpan);
+                stepRow.appendChild(slotsGroup);
+                stepsContainer.appendChild(stepRow);
+            });
+
+            buildCardsBank(q);
+        }
+
+        function buildCardsBank(q) {
+            const bank = document.getElementById('cards-bank');
+            bank.innerHTML = '';
+
+            let allCards = [];
+            q.steps.forEach(s => allCards.push(...s.target));
+            allCards.push(...q.distractors);
+
+            allCards = shuffleArray([...allCards]);
+
+            allCards.forEach((text, i) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.textContent = text;
+                card.dataset.value = text;
+                card.id = `card-${i}`;
+
+                card.addEventListener('click', (e) => {
+                    if (activeCard) return;
+                    if (selectedCard === card) {
+                        card.classList.remove('selected');
+                        selectedCard = null;
+                    } else {
+                        if (selectedCard) selectedCard.classList.remove('selected');
+                        selectedCard = card;
+                        card.classList.add('selected');
+                    }
+                });
+
+                enablePointerDrag(card);
+                bank.appendChild(card);
+            });
+        }
+
+        function shuffleArray(arr) {
+            return arr.sort(() => Math.random() - 0.5);
+        }
+
+        let activeCard = null;
+        let startX, startY;
+
+        function enablePointerDrag(card) {
+            card.addEventListener('pointerdown', onPointerDown);
+        }
+
+        function onPointerDown(e) {
+            if (e.button !== 0 && e.pointerType === 'mouse') return;
+            
+            activeCard = e.currentTarget;
+            activeCard.classList.add('dragging');
+            activeCard.setPointerCapture(e.pointerId);
+
+            const rect = activeCard.getBoundingClientRect();
+            startX = e.clientX;
+            startY = e.clientY;
+
+            activeCard.style.position = 'fixed';
+            activeCard.style.left = `${rect.left}px`;
+            activeCard.style.top = `${rect.top}px`;
+
+            activeCard.addEventListener('pointermove', onPointerMove);
+            activeCard.addEventListener('pointerup', onPointerUp);
+            activeCard.addEventListener('pointercancel', onPointerUp);
+        }
+
+        function onPointerMove(e) {
+            if (!activeCard) return;
+            const dx = e.clientX - startX;
+            const dy = e.clientY - startY;
+
+            const currentLeft = parseFloat(activeCard.style.left);
+            const currentTop = parseFloat(activeCard.style.top);
+
+            activeCard.style.left = `${currentLeft + dx}px`;
+            activeCard.style.top = `${currentTop + dy}px`;
+
+            startX = e.clientX;
+            startY = e.clientY;
+
+            checkHoverSlot(e.clientX, e.clientY);
+        }
+
+        function onPointerUp(e) {
+            if (!activeCard) return;
+
+            activeCard.releasePointerCapture(e.pointerId);
+            activeCard.removeEventListener('pointermove', onPointerMove);
+            activeCard.removeEventListener('pointerup', onPointerUp);
+            activeCard.removeEventListener('pointercancel', onPointerUp);
+
+            const dropTarget = getDropTarget(e.clientX, e.clientY);
+
+            if (dropTarget) {
+                validateDrop(activeCard, dropTarget);
+            } else {
+                resetCardPosition(activeCard);
+            }
+
+            activeCard.classList.remove('dragging');
+            activeCard = null;
+            clearSlotHover();
+        }
+
+        function getDropTarget(x, y) {
+            const slots = document.querySelectorAll('.slot:not(.filled)');
+            for (let slot of slots) {
+                const rect = slot.getBoundingClientRect();
+                if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+                    return slot;
+                }
+            }
+            return null;
+        }
+
+        function checkHoverSlot(x, y) {
+            clearSlotHover();
+            const slot = getDropTarget(x, y);
+            if (slot) {
+                slot.classList.add('hovered');
+            }
+        }
+
+        function clearSlotHover() {
+            document.querySelectorAll('.slot.hovered').forEach(s => s.classList.remove('hovered'));
+        }
+
+        function resetCardPosition(card) {
+            card.style.position = 'static';
+            card.style.left = 'auto';
+            card.style.top = 'auto';
+        }
+
+        function validateDrop(card, slot) {
+            const stepIdx = parseInt(slot.dataset.step);
+            const slotIdx = parseInt(slot.dataset.slot);
+            const targetValue = slot.dataset.target;
+            const cardValue = card.dataset.value;
+
+            if (stepIdx !== currentStepIndex || slotIdx !== currentSlotIndex) {
+                showFeedback("لطفاً مراحل را به ترتیب و کادر به کادر پر کنید.", "error");
+                resetCardPosition(card);
+                if (selectedCard) {
+                    selectedCard.classList.remove('selected');
+                    selectedCard = null;
+                }
+                return;
+            }
+
+            if (cardValue === targetValue) {
+                slot.textContent = cardValue;
+                slot.classList.add('filled');
+                showFeedback("آفرین! 👏", "success");
+
+                if (selectedCard) {
+                    selectedCard.classList.remove('selected');
+                    selectedCard = null;
+                }
+
+                card.remove();
+                currentSlotIndex++;
+
+                const currentStepData = questionsData[currentQuestionIndex].steps[currentStepIndex];
+                if (currentSlotIndex >= currentStepData.target.length) {
+                    currentStepIndex++;
+                    currentSlotIndex = 0;
+                }
+
+                if (currentStepIndex >= questionsData[currentQuestionIndex].steps.length) {
+                    score += 3;
+                    document.getElementById('score-tracker').textContent = `امتیاز: ${score} از ۶`;
+
+                    setTimeout(() => {
+                        if (currentQuestionIndex + 1 < questionsData.length) {
+                            showFeedback("سؤال اول با موفقیت حل شد! 👏", "success");
+                            setTimeout(() => {
+                                loadQuestion(currentQuestionIndex + 1);
+                            }, 1200);
+                        } else {
+                            showResults();
+                        }
+                    }, 800);
+                }
+            } else {
+                showFeedback("این انتخاب درست نیست.", "error");
+
+                if (selectedCard) {
+                    selectedCard.classList.remove('selected');
+                    selectedCard = null;
+                }
+
+                const originalText = slot.textContent;
+                slot.textContent = targetValue;
+                slot.style.color = "var(--error-color)";
+
+                resetCardPosition(card);
+
+                setTimeout(() => {
+                    slot.textContent = originalText;
+                    slot.style.color = "#0f172a";
+                }, 2000);
+            }
+        }
+
+        function showFeedback(text, type) {
+            feedbackEl.textContent = text;
+            feedbackEl.className = `feedback-message feedback-${type}`;
+            feedbackEl.style.display = 'block';
+
+            setTimeout(() => {
+                feedbackEl.style.display = 'none';
+            }, 2000);
+        }
+
+        function showResults() {
+            gamePage.style.display = 'none';
+            resultPage.style.display = 'block';
+
+            document.getElementById('res-name').textContent = `نام دانش‌آموز: ${studentName}`;
+            document.getElementById('res-score').textContent = `امتیاز نهایی: ${score} از ۶`;
+
+            const correctCount = score / 3;
+            document.getElementById('res-correct').textContent = `تعداد سؤال‌های صحیح: ${correctCount} از ۲`;
+
+            const percent = Math.round((score / 6) * 100);
+            document.getElementById('res-percent').textContent = `درصد موفقیت: ${percent}٪`;
+
+            let msg = "";
+            if (percent === 100) {
+                msg = "عالی بود! 👏 شما تسلط کامل بر عبارت‌های جبری دارید.";
+            } else if (percent >= 50) {
+                msg = "خوب تلاش کردی! با دقت بیشتر روی ساده‌سازی بهتر هم می‌شوی.";
+            } else {
+                msg = "نیاز به تمرین بیشتری در ساده‌سازی عبارت‌های جبری داری. موفق باشی!";
+            }
+
+            document.getElementById('res-msg').textContent = msg;
+        }
+    </script>
+</body>
+</html>
